@@ -118,61 +118,74 @@ class RayCastParser():
 
 
 if __name__ == "__main__":
-    # Test 1: Simple test to check if GOODGOAL and IMMOVABLE objects are correctly parsed
-    # Description: This test checks if the parser correctly identifies GOODGOAL and IMMOVABLE objects
-    # and places them correctly in the parsed raycast array.
-    rayParser = RayCastParser(
-        [RayCastObjects.GOODGOAL, RayCastObjects.IMMOVABLE], 5)
-    test_raycast = [1, 1, 1, 1, 1, 1, 0, 0.1,
-                    1, 1, 1, 1, 1, 1, 0, 0.2,
-                    1, 1, 1, 1, 1, 1, 1, 0.3,
-                    1, 1, 1, 1, 1, 1, 1, 0.4,
-                    1, 1, 1, 1, 1, 1, 1, 0.5]
-    parsedRaycast = rayParser.parse(test_raycast)
-    print("Parsed Raycast for Test 1:")
-    print(parsedRaycast)
-    rayParser.prettyPrint(test_raycast)
+    tests = [
+        [
+            # Test 1: Simple test to check if GOODGOAL and IMMOVABLE objects are correctly parsed
+            # Description: Checks if the parser correctly identifies GOODGOAL and IMMOVABLE objects
+            # and places them correctly in the parsed raycast array.
+            [RayCastObjects.GOODGOAL, RayCastObjects.IMMOVABLE],
+            5,
+            [1, 1, 1, 1, 1, 1, 0, 0.1,
+            1, 1, 1, 1, 1, 1, 0, 0.2,
+            1, 1, 1, 1, 1, 1, 1, 0.3,
+            1, 1, 1, 1, 1, 1, 1, 0.4,
+            1, 1, 1, 1, 1, 1, 1, 0.5],
+            [[0.3, 0.5, 0.1, 0.4, 0.2], [0.3, 0.5, 0.1, 0.4, 0.2]]
+        ],
+        [
+            # Test 2: Checking for no objects detected
+            # Description: Checks if the parser correctly identifies when no objects are detected.
+            [RayCastObjects.GOODGOAL, RayCastObjects.IMMOVABLE],
+            3,
+            [0, 0, 0, 0, 0, 0, 0, 0.1,
+            0, 0, 0, 0, 0, 0, 0, 0.2,
+            0, 0, 0, 0, 0, 0, 0, 0.3],
+            [[0, 0, 0], [0, 0, 0]]
+        ],
+        [
+            # Test 3: Mix of objects detected and not detected
+            # Description: Checks the parser correctly identifies some objects and ignores others.
+            [RayCastObjects.ARENA, RayCastObjects.MOVABLE, RayCastObjects.GOODGOALMULTI],
+            7,
+            [1, 0, 0, 0, 0, 0, 0, 0.1,
+            0, 1, 0, 0, 0, 0, 0, 0.2,
+            0, 0, 1, 0, 0, 0, 1, 0.3,
+            0, 0, 0, 1, 0, 0, 1, 0.4,
+            0, 0, 0, 0, 1, 0, 1, 0.5,
+            0, 0, 0, 0, 0, 1, 1, 0.6,
+            0, 0, 0, 0, 0, 0, 0, 0],
+            [[0,  0,  0,  0.1, 0,  0,  0],
+            [0.3, 0,  0,  0,  0,  0,  0, ],
+            [0,  0.5, 0,  0,  0,  0,  0 ]]
+        ],
+        [
+            # Test 4: Mix of objects detected and not detected, including PILLARBUTTON
+            # Description: Check for object identification/ignoring, including PILLARBUTTON
+            [RayCastObjects.ARENA, RayCastObjects.PILLARBUTTON, RayCastObjects.MOVABLE],
+            7,
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0.1,
+            0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0.2,
+            0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0.3,
+            0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0.4,
+            0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0.5,
+            0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.6,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+            [[0,  0,  0,  0.1, 0,  0,  0, ],
+            [0.3, 0.5, 0,  0.1, 0.6, 0.4, 0.2],
+            [0.3, 0,  0,  0,  0,  0,  0 ]]
+        ]
+    ]
 
-    # Test 2: Checking for no objects detected
-    # Description: This test checks if the parser correctly identifies when no objects are detected.
-    rayParser = RayCastParser(
-        [RayCastObjects.GOODGOAL, RayCastObjects.BADGOAL], 3)
-    test_raycast = [0, 0, 0, 0, 0, 0, 0, 0.1,
-                    0, 0, 0, 0, 0, 0, 0, 0.2,
-                    0, 0, 0, 0, 0, 0, 0, 0.3]
-    parsedRaycast = rayParser.parse(test_raycast)
-    print("Parsed Raycast for Test 2:")
-    print(parsedRaycast)
-    rayParser.prettyPrint(test_raycast)
-
-    # Test 3: Mix of objects detected and not detected
-    # Description: This test checks if the parser correctly identifies some objects while ignoring others.
-    rayParser = RayCastParser(
-        [RayCastObjects.ARENA, RayCastObjects.MOVABLE, RayCastObjects.GOODGOALMULTI], 7)
-    test_raycast = [1, 0, 0, 0, 0, 0, 0, 0.1,
-                    0, 1, 0, 0, 0, 0, 0, 0.2,
-                    0, 0, 1, 0, 0, 0, 1, 0.3,
-                    0, 0, 0, 1, 0, 0, 1, 0.4,
-                    0, 0, 0, 0, 1, 0, 1, 0.5,
-                    0, 0, 0, 0, 0, 1, 1, 0.6,
-                    0, 0, 0, 0, 0, 0, 0, 0]
-    parsedRaycast = rayParser.parse(test_raycast)
-    print("Parsed Raycast for Test 3:")
-    print(parsedRaycast)
-    rayParser.prettyPrint(test_raycast)
-
-    # Test 4: Mix of objects detected and not detected, including PILLARBUTTON
-    # Description: This test checks if the parser correctly identifies some objects including PILLARBUTTON while ignoring others.
-    rayParser = RayCastParser(
-        [RayCastObjects.ARENA, RayCastObjects.PILLARBUTTON, RayCastObjects.MOVABLE], 7)
-    test_raycast = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0.1,
-                    0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0.2,
-                    0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0.3,
-                    0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0.4,
-                    0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0.5,
-                    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.6,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0]
-    parsedRaycast = rayParser.parse(test_raycast)
-    print("Parsed Raycast for Test 4:")
-    print(parsedRaycast)
-    rayParser.prettyPrint(test_raycast)
+    # TODO: Transfer tests to a testing framework
+    # TODO: Add assertations for pretty printing
+    for i, [parser_objects, no_rays, test_raycast, expected_parsed_raycast] in enumerate(tests):
+        rayParser = RayCastParser(
+            parser_objects, no_rays)
+        parsedRaycast = rayParser.parse(test_raycast)
+        assert np.array_equal(
+            parsedRaycast,
+            expected_parsed_raycast
+        ), f"Failed comparison of parsed and expected raycast for Test {i}"
+        print(f"Parsed Raycast for Test {i}:")
+        print(parsedRaycast)
+        rayParser.prettyPrint(test_raycast)
